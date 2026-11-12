@@ -1,0 +1,1316 @@
+<!-- admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>LUXE · admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #6c5ce7;
+      --primary-light: #a29bfe;
+      --secondary: #fd79a8;
+      --accent: #00b894;
+      --bg: #f1f3f9;
+      --card-bg: #ffffff;
+      --text: #2d3436;
+      --text-light: #636e72;
+      --sidebar-bg: #1e1e2f;
+      --sidebar-text: #cdcdd8;
+      --sidebar-active: #6c5ce7;
+      --danger: #d63031;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.1);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --sidebar-width: 240px;
+      --header-height: 68px;
+      --bottom-nav-height: 64px;
+      --transition: all 0.2s ease;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ========== LOGIN SCREEN ========== */
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #1e1e2f, #2d2d44);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 5000;
+    }
+
+    .login-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .login-card h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .login-card p {
+      color: var(--text-light);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--text-light);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 40px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: var(--transition);
+      background: #fafafa;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    textarea.form-control {
+      border-radius: var(--radius-sm);
+      resize: vertical;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 40px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-primary:active { transform: scale(0.97); }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .login-error {
+      color: var(--danger);
+      font-size: 0.8rem;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* ========== APP LAYOUT ========== */
+    .app-layout {
+      display: none;
+    }
+
+    .app-layout.ready {
+      display: block;
+    }
+
+    /* ========== SIDEBAR ========== */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      padding: 24px 16px;
+      z-index: 900;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 32px;
+      padding-left: 8px;
+      background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sidebar-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .sidebar-link i { width: 20px; font-size: 1rem; }
+
+    .sidebar-link:hover { background: rgba(255,255,255,0.06); color: #fff; }
+
+    .sidebar-link.active {
+      background: var(--sidebar-active);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(108, 92, 231, 0.4);
+    }
+
+    .sidebar-logout {
+      margin-top: auto;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 12px;
+    }
+
+    .sidebar-logout .sidebar-link { color: #ff7675; }
+    .sidebar-logout .sidebar-link:hover { background: rgba(255,118,117,0.12); }
+
+    /* ========== MAIN ========== */
+    .main-area {
+      margin-left: var(--sidebar-width);
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 12px;
+    }
+
+    .topbar-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .hamburger {
+      display: none;
+      background: #fff;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .admin-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 40px;
+      box-shadow: var(--shadow-sm);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .admin-user i {
+      color: var(--primary);
+    }
+
+    /* ========== SECTIONS ========== */
+    .admin-section {
+      display: none;
+      animation: fade 0.25s ease;
+    }
+
+    .admin-section.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0.4; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========== STATS ========== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-sm);
+      padding: 20px 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: var(--transition);
+    }
+
+    .stat-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.purple { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+    .stat-icon.pink { background: linear-gradient(135deg, #fd79a8, #e84393); }
+    .stat-icon.green { background: linear-gradient(135deg, #00b894, #55efc4); }
+    .stat-icon.orange { background: linear-gradient(135deg, #e17055, #fdcb6e); }
+
+    .stat-info h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-info p {
+      font-size: 0.72rem;
+      color: var(--text-light);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    /* ========== CARDS ========== */
+    .panel {
+      background: var(--card-bg);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 9px 18px;
+      border: none;
+      border-radius: 40px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-danger { background: #ffeaea; color: var(--danger); }
+    .btn-danger:hover { background: #ffd6d6; }
+    .btn-sm { padding: 6px 12px; font-size: 0.72rem; }
+
+    /* ========== TABLES ========== */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+    }
+
+    th {
+      text-align: left;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+      padding: 12px 16px;
+      background: #fafafa;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 16px;
+      font-size: 0.8rem;
+      border-bottom: 1px solid #f5f5f5;
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .table-img {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #eee;
+    }
+
+    .table-actions {
+      display: flex;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: var(--transition);
+      background: #f4f4f4;
+      color: var(--text);
+    }
+
+    .icon-btn.edit { background: #eef0ff; color: var(--primary); }
+    .icon-btn.delete { background: #ffeaea; color: var(--danger); }
+
+    /* ========== STATUS SELECT ========== */
+    .status-select {
+      padding: 6px 10px;
+      border-radius: 30px;
+      border: 1.5px solid #e0e0e0;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .status-select:focus { border-color: var(--primary); }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .status-Pending { background: #fff6e0; color: #b8860b; }
+    .status-Confirmed { background: #e3f2fd; color: #1565c0; }
+    .status-Preparing { background: #fff0e6; color: #c05621; }
+    .status-Shipped { background: #ede7f6; color: #5e35b1; }
+    .status-Delivered { background: #e0f7ec; color: #00695c; }
+    .status-Cancelled { background: #ffeaea; color: #c62828; }
+
+    /* ========== SLIDER GRID ========== */
+    .slider-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      padding: 18px;
+    }
+
+    @media (min-width: 600px) {
+      .slider-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (min-width: 1000px) {
+      .slider-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .slider-card {
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      aspect-ratio: 16/9;
+      background: #eee;
+    }
+
+    .slider-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slider-card .delete-slider {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ========== MESSAGES ========== */
+    .message-card {
+      padding: 16px 18px;
+      border-bottom: 1px solid #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .message-card:last-child { border-bottom: none; }
+
+    .message-meta {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+
+    .message-sender {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    .message-body {
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* ========== MODALS ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: var(--radius);
+      max-width: 480px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px 20px;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(12px);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.open .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: var(--text-light);
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* ========== TOAST ========== */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      z-index: 4000;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; }
+
+    /* ========== EMPTY STATE ========== */
+    .empty-state {
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+
+    .empty-state i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      opacity: 0.35;
+      display: block;
+    }
+
+    /* ========== MOBILE BOTTOM NAV ========== */
+    .admin-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-nav-height);
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(0,0,0,0.05);
+      z-index: 800;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 8px;
+    }
+
+    .admin-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 0.62rem;
+      font-weight: 500;
+      color: var(--text-light);
+      cursor: pointer;
+      flex: 1;
+      padding: 6px 0;
+      transition: var(--transition);
+      background: none;
+      border: none;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .admin-nav-item i { font-size: 1.15rem; }
+    .admin-nav-item.active { color: var(--primary); }
+
+    /* ========== SIDEBAR OVERLAY (mobile) ========== */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 850;
+    }
+
+    .sidebar-overlay.open { display: block; }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 899px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 10px 0 40px rgba(0,0,0,0.2);
+      }
+
+      .main-area {
+        margin-left: 0;
+        padding: 16px 16px calc(var(--bottom-nav-height) + 24px);
+      }
+
+      .hamburger { display: flex; align-items: center; justify-content: center; }
+
+      .admin-bottom-nav { display: flex; }
+
+      .admin-user { display: none; }
+
+      .topbar-title { font-size: 1.1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid { gap: 10px; }
+      .stat-card { padding: 14px 12px; gap: 10px; }
+      .stat-icon { width: 38px; height: 38px; font-size: 1rem; }
+      .stat-info h3 { font-size: 1.15rem; }
+      .stat-info p { font-size: 0.62rem; }
+      .panel-header { padding: 14px; }
+      .slider-grid { padding: 14px; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== LOGIN SCREEN ========== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <h1>LUXE Admin</h1>
+      <p>Sign in with your admin account</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="adminEmail" class="form-control" placeholder="admin@example.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="adminPassword" class="form-control" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" id="loginBtn">Sign In</button>
+      <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+
+  <!-- ========== APP ========== -->
+  <div class="app-layout" id="appLayout">
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">LUXE · admin</div>
+      <ul class="sidebar-links">
+        <li><button class="sidebar-link" data-route="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button></li>
+        <li><button class="sidebar-link" data-route="products"><i class="fas fa-box"></i> Products</button></li>
+        <li><button class="sidebar-link" data-route="orders"><i class="fas fa-shopping-bag"></i> Orders</button></li>
+        <li><button class="sidebar-link" data-route="slider"><i class="fas fa-images"></i> Slider</button></li>
+        <li><button class="sidebar-link" data-route="messages"><i class="fas fa-envelope"></i> Messages</button></li>
+      </ul>
+      <div class="sidebar-logout">
+        <button class="sidebar-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-area">
+      <div class="topbar">
+        <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+        <div class="topbar-title" id="topbarTitle">Dashboard</div>
+        <div class="admin-user"><i class="fas fa-user-shield"></i> <span id="adminEmailDisplay">—</span></div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <section id="dashboard" class="admin-section active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon purple"><i class="fas fa-box"></i></div>
+            <div class="stat-info"><h3 id="statProducts">0</h3><p>Products</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon pink"><i class="fas fa-shopping-bag"></i></div>
+            <div class="stat-info"><h3 id="statOrders">0</h3><p>Orders</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-users"></i></div>
+            <div class="stat-info"><h3 id="statUsers">0</h3><p>Users</p></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="fas fa-envelope"></i></div>
+            <div class="stat-info"><h3 id="statMessages">0</h3><p>Messages</p></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Quick Overview</span></div>
+          <div style="padding:18px;font-size:0.85rem;color:var(--text-light);line-height:1.7;">
+            Welcome to the LUXE admin dashboard. Use the sidebar or bottom navigation to manage products, orders, slider images, and customer messages. All data is live from Firebase Realtime Database.
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section id="products" class="admin-section">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Products</span>
+            <button class="btn btn-primary" id="addProductBtn"><i class="fas fa-plus"></i> Add Product</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Description</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section id="orders" class="admin-section">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Orders</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th><th>Customer</th><th>Phone</th><th>Email</th><th>Address</th>
+                  <th>Date</th><th>Total</th><th>Status</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDER -->
+      <section id="slider" class="admin-section">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Slider Images</span>
+            <button class="btn btn-primary" id="addSliderBtn"><i class="fas fa-plus"></i> Add Image</button>
+          </div>
+          <div class="slider-grid" id="sliderGrid"></div>
+        </div>
+      </section>
+
+      <!-- MESSAGES -->
+      <section id="messages" class="admin-section">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Contact Messages</span></div>
+          <div id="messagesList"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="admin-bottom-nav">
+      <button class="admin-nav-item active" data-route="dashboard"><i class="fas fa-chart-pie"></i>Dashboard</button>
+      <button class="admin-nav-item" data-route="products"><i class="fas fa-box"></i>Products</button>
+      <button class="admin-nav-item" data-route="orders"><i class="fas fa-shopping-bag"></i>Orders</button>
+      <button class="admin-nav-item" data-route="slider"><i class="fas fa-images"></i>Slider</button>
+      <button class="admin-nav-item" data-route="messages"><i class="fas fa-envelope"></i>Messages</button>
+    </nav>
+  </div>
+
+  <!-- PRODUCT MODAL -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-title" id="productModalTitle">Add Product</span>
+        <button class="close-modal" data-close="productModal">✕</button>
+      </div>
+      <div class="form-group"><label>Name</label><input id="prodName" class="form-control"></div>
+      <div class="form-group"><label>Category</label><input id="prodCategory" class="form-control"></div>
+      <div class="form-group"><label>Price</label><input id="prodPrice" class="form-control" type="number" step="0.01"></div>
+      <div class="form-group"><label>Description</label><textarea id="prodDescription" class="form-control" rows="2"></textarea></div>
+      <div class="form-group"><label>Image URL</label><input id="prodImageUrl" class="form-control"></div>
+      <button class="btn-primary" id="saveProductBtn">Save Product</button>
+    </div>
+  </div>
+
+  <!-- SLIDER MODAL -->
+  <div class="modal-overlay" id="sliderModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-title">Add Slider Image</span>
+        <button class="close-modal" data-close="sliderModal">✕</button>
+      </div>
+      <div class="form-group"><label>Image URL</label><input id="sliderUrl" class="form-control" placeholder="https://..."></div>
+      <button class="btn-primary" id="saveSliderBtn">Add Image</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, push, update, remove, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    // Your new Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOQ02NIrfF5rG8W-V07DivVTdWRWiDmkk",
+      authDomain: "demoapp-434fe.firebaseapp.com",
+      databaseURL: "https://demoapp-434fe-default-rtdb.firebaseio.com",
+      projectId: "demoapp-434fe",
+      storageBucket: "demoapp-434fe.firebasestorage.app",
+      messagingSenderId: "990109247068",
+      appId: "1:990109247068:web:bea6955975f8f676b16899"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    // State
+    let currentUser = null;
+    let products = {};
+    let orders = {};
+    let users = {};
+    let messages = {};
+    let sliderItems = {};
+    let editingProductId = null;
+    let currentRoute = 'dashboard';
+
+    // DOM
+    const loginScreen = document.getElementById('loginScreen');
+    const appLayout = document.getElementById('appLayout');
+    const loginError = document.getElementById('loginError');
+    const toast = document.getElementById('toast');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    // Toast
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ========== AUTH ==========
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const email = document.getElementById('adminEmail').value.trim();
+      const pass = document.getElementById('adminPassword').value;
+      loginError.style.display = 'none';
+      const btn = document.getElementById('loginBtn');
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+      } catch (e) {
+        loginError.textContent = e.message;
+        loginError.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+      }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        loginScreen.style.display = 'none';
+        appLayout.classList.add('ready');
+        document.getElementById('adminEmailDisplay').textContent = user.email;
+        initRealtimeListeners();
+        navigateTo(currentRoute);
+      } else {
+        currentUser = null;
+        loginScreen.style.display = 'flex';
+        appLayout.classList.remove('ready');
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      signOut(auth).then(() => {
+        loginScreen.style.display = 'flex';
+        appLayout.classList.remove('ready');
+      });
+    });
+
+    // ========== REALTIME LISTENERS ==========
+    function initRealtimeListeners() {
+      // products
+      onValue(ref(db, 'products'), (snap) => {
+        products = snap.val() || {};
+        renderProductsTable();
+        document.getElementById('statProducts').textContent = Object.keys(products).length;
+      });
+
+      // orders
+      onValue(ref(db, 'orders'), (snap) => {
+        orders = snap.val() || {};
+        renderOrdersTable();
+        let count = 0;
+        Object.values(orders).forEach(u => { count += Object.keys(u).length; });
+        document.getElementById('statOrders').textContent = count;
+      });
+
+      // users
+      onValue(ref(db, 'users'), (snap) => {
+        users = snap.val() || {};
+        document.getElementById('statUsers').textContent = Object.keys(users).length;
+      });
+
+      // messages
+      onValue(ref(db, 'messages'), (snap) => {
+        messages = snap.val() || {};
+        renderMessages();
+        document.getElementById('statMessages').textContent = Object.keys(messages).length;
+      });
+
+      // slider
+      onValue(ref(db, 'sliderImages'), (snap) => {
+        sliderItems = snap.val() || {};
+        renderSliderGrid();
+      });
+    }
+
+    // ========== ROUTING ==========
+    function navigateTo(route) {
+      currentRoute = route;
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById(route);
+      if (el) el.classList.add('active');
+
+      document.querySelectorAll('.sidebar-link[data-route]').forEach(l => {
+        l.classList.toggle('active', l.dataset.route === route);
+      });
+      document.querySelectorAll('.admin-nav-item[data-route]').forEach(l => {
+        l.classList.toggle('active', l.dataset.route === route);
+      });
+
+      const titles = {
+        dashboard: 'Dashboard', products: 'Products', orders: 'Orders',
+        slider: 'Slider', messages: 'Messages'
+      };
+      document.getElementById('topbarTitle').textContent = titles[route] || 'Dashboard';
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('open');
+    }
+
+    document.querySelectorAll('.sidebar-link[data-route]').forEach(btn => {
+      btn.addEventListener('click', () => navigateTo(btn.dataset.route));
+    });
+    document.querySelectorAll('.admin-nav-item[data-route]').forEach(btn => {
+      btn.addEventListener('click', () => navigateTo(btn.dataset.route));
+    });
+
+    // mobile sidebar
+    document.getElementById('hamburgerBtn').addEventListener('click', () => {
+      sidebar.classList.add('open');
+      sidebarOverlay.classList.add('open');
+    });
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('open');
+    });
+
+    // ========== PRODUCTS TABLE ==========
+    function renderProductsTable() {
+      const tbody = document.getElementById('productsTableBody');
+      const entries = Object.entries(products);
+      if (entries.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-box-open"></i>No products yet</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = entries.map(([id, p]) => `
+        <tr>
+          <td><img class="table-img" src="${p.imageUrl || 'https://via.placeholder.com/42'}" alt=""></td>
+          <td style="font-weight:600;">${p.name || '—'}</td>
+          <td>${p.category || '—'}</td>
+          <td>$${p.price ?? '—'}</td>
+          <td style="max-width:180px;color:var(--text-light);">${(p.description || '').slice(0, 60)}${(p.description || '').length > 60 ? '…' : ''}</td>
+          <td>
+            <div class="table-actions">
+              <button class="icon-btn edit" data-edit-product="${id}"><i class="fas fa-pen"></i></button>
+              <button class="icon-btn delete" data-del-product="${id}"><i class="fas fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      tbody.querySelectorAll('[data-edit-product]').forEach(b => {
+        b.addEventListener('click', () => openProductModal(b.dataset.editProduct));
+      });
+      tbody.querySelectorAll('[data-del-product]').forEach(b => {
+        b.addEventListener('click', () => deleteProduct(b.dataset.delProduct));
+      });
+    }
+
+    function openProductModal(productId = null) {
+      editingProductId = productId;
+      document.getElementById('productModalTitle').textContent = productId ? 'Edit Product' : 'Add Product';
+      if (productId && products[productId]) {
+        const p = products[productId];
+        document.getElementById('prodName').value = p.name || '';
+        document.getElementById('prodCategory').value = p.category || '';
+        document.getElementById('prodPrice').value = p.price ?? '';
+        document.getElementById('prodDescription').value = p.description || '';
+        document.getElementById('prodImageUrl').value = p.imageUrl || '';
+      } else {
+        ['prodName','prodCategory','prodPrice','prodDescription','prodImageUrl'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+      }
+      document.getElementById('productModal').classList.add('open');
+    }
+
+    document.getElementById('addProductBtn').addEventListener('click', () => openProductModal(null));
+
+    document.getElementById('saveProductBtn').addEventListener('click', async () => {
+      const data = {
+        name: document.getElementById('prodName').value.trim(),
+        category: document.getElementById('prodCategory').value.trim(),
+        price: parseFloat(document.getElementById('prodPrice').value) || 0,
+        description: document.getElementById('prodDescription').value.trim(),
+        imageUrl: document.getElementById('prodImageUrl').value.trim()
+      };
+      if (!data.name || !data.price) { showToast('Name and price are required'); return; }
+      try {
+        if (editingProductId) {
+          await update(ref(db, `products/${editingProductId}`), data);
+          showToast('Product updated');
+        } else {
+          const newRef = push(ref(db, 'products'));
+          await set(newRef, data);
+          showToast('Product added');
+        }
+        closeModal('productModal');
+      } catch (e) { showToast(e.message); }
+    });
+
+    async function deleteProduct(id) {
+      if (!confirm('Delete this product permanently?')) return;
+      try {
+        await remove(ref(db, `products/${id}`));
+        showToast('Product deleted');
+      } catch (e) { showToast(e.message); }
+    }
+
+    // ========== ORDERS TABLE ==========
+    const STATUS_OPTIONS = ['Pending', 'Confirmed', 'Preparing', 'Shipped', 'Delivered', 'Cancelled'];
+
+    function renderOrdersTable() {
+      const tbody = document.getElementById('ordersTableBody');
+      const flat = [];
+      Object.entries(orders).forEach(([uid, userOrders]) => {
+        Object.entries(userOrders).forEach(([oid, o]) => {
+          flat.push({ uid, oid, ...o });
+        });
+      });
+      flat.sort((a, b) => (b.date || 0) - (a.date || 0));
+
+      if (flat.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><i class="fas fa-shopping-bag"></i>No orders yet</div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = flat.map(o => `
+        <tr>
+          <td style="font-weight:600;">#${(o.orderId || o.oid).slice(0, 8)}</td>
+          <td>${o.username || '—'}</td>
+          <td>${o.phoneNumber || '—'}</td>
+          <td>${o.userEmail || '—'}</td>
+          <td style="max-width:180px;color:var(--text-light);">${(o.shippingAddress || '').slice(0, 60)}${(o.shippingAddress || '').length > 60 ? '…' : ''}</td>
+          <td>${o.date ? new Date(o.date).toLocaleDateString() : '—'}</td>
+          <td style="font-weight:600;">$${o.totalAmount ?? 0}</td>
+          <td>
+            <select class="status-select status-${o.status}" data-order-uid="${o.uid}" data-order-id="${o.oid}">
+              ${STATUS_OPTIONS.map(s => `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+            </select>
+          </td>
+          <td>
+            <button class="icon-btn delete" data-del-order-uid="${o.uid}" data-del-order-id="${o.oid}"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+
+      tbody.querySelectorAll('.status-select').forEach(sel => {
+        sel.addEventListener('change', async () => {
+          const uid = sel.dataset.orderUid;
+          const oid = sel.dataset.orderId;
+          try {
+            await update(ref(db, `orders/${uid}/${oid}`), { status: sel.value });
+            sel.className = 'status-select status-' + sel.value;
+            showToast('Status updated');
+          } catch (e) { showToast(e.message); }
+        });
+      });
+
+      tbody.querySelectorAll('[data-del-order-uid]').forEach(b => {
+        b.addEventListener('click', async () => {
+          if (!confirm('Delete this order permanently?')) return;
+          try {
+            await remove(ref(db, `orders/${b.dataset.delOrderUid}/${b.dataset.delOrderId}`));
+            showToast('Order deleted');
+          } catch (e) { showToast(e.message); }
+        });
+      });
+    }
+
+    // ========== SLIDER ==========
+    function renderSliderGrid() {
+      const grid = document.getElementById('sliderGrid');
+      const entries = Object.entries(sliderItems);
+      if (entries.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-images"></i>No slider images</div>`;
+        return;
+      }
+      grid.innerHTML = entries.map(([id, obj]) => {
+        const url = obj.downloadURL || obj.url || '';
+        return `<div class="slider-card">
+          <img src="${url}" alt="">
+          <button class="delete-slider" data-del-slider="${id}"><i class="fas fa-trash"></i></button>
+        </div>`;
+      }).join('');
+
+      grid.querySelectorAll('[data-del-slider]').forEach(b => {
+        b.addEventListener('click', async () => {
+          if (!confirm('Delete this slider image?')) return;
+          try {
+            await remove(ref(db, `sliderImages/${b.dataset.delSlider}`));
+            showToast('Slider image deleted');
+          } catch (e) { showToast(e.message); }
+        });
+      });
+    }
+
+    document.getElementById('addSliderBtn').addEventListener('click', () => {
+      document.getElementById('sliderUrl').value = '';
+      document.getElementById('sliderModal').classList.add('open');
+    });
+
+    document.getElementById('saveSliderBtn').addEventListener('click', async () => {
+      const url = document.getElementById('sliderUrl').value.trim();
+      if (!url) { showToast('Image URL is required'); return; }
+      try {
+        const newRef = push(ref(db, 'sliderImages'));
+        await set(newRef, { downloadURL: url });
+        closeModal('sliderModal');
+        showToast('Slider image added');
+      } catch (e) { showToast(e.message); }
+    });
+
+    // ========== MESSAGES ==========
+    function renderMessages() {
+      const container = document.getElementById('messagesList');
+      const entries = Object.entries(messages).sort((a, b) => (b[1].date || 0) - (a[1].date || 0));
+      if (entries.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-envelope-open"></i>No messages yet</div>`;
+        return;
+      }
+      container.innerHTML = entries.map(([id, m]) => `
+        <div class="message-card">
+          <div class="message-meta">
+            <span class="message-sender">${m.name || 'Anonymous'}</span>
+            <span>${m.date ? new Date(m.date).toLocaleString() : ''}</span>
+          </div>
+          <div class="message-meta"><span>${m.email || ''}</span></div>
+          <div class="message-body">${m.message || ''}</div>
+        </div>
+      `).join('');
+    }
+
+    // ========== MODAL HELPERS ==========
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    document.querySelectorAll('[data-close]').forEach(btn => {
+      btn.addEventListener('click', () => closeModal(btn.dataset.close));
+    });
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('open');
+      });
+    });
+
+    // initial route
+    navigateTo('dashboard');
+  </script>
+</body>
+</html>
